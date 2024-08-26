@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Anomaly Generator</title>
+    <style>
+        html,body {
+            background-color: rgb(15, 15, 20);
+        }
+        .text {
+            margin: 0;
+            top: 7.5px;
+            left: 7.5px;
+            position: absolute;
+            display: block;
+        }
+        .left-text {
+            
+            width: 434px;
+            height: 407px;
+        }
+        .right-text {
+            width: 300px;
+            height: 474px;
+        }
+        .name {
+            width: 230px;
+            height: 33px;
+        }
+        .name input {
+            font-size: 33px;
+        }
+        textarea,input {
+            position: relative;
+            margin: 5px;
+            width: calc(100% - 10px) !important;
+            height: calc(100% - 10px) !important;
+            background-color: transparent;
+            border: none;
+            resize: none;
+        }
+        
+
+        * {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .big-image {
+            width: 500px;
+            height: 500px;
+        }
+        .vert-image {
+            width: 500px;
+            height: 500px;
+        }
+        .image {
+            position: absolute;
+            display: block;
+        }
+        .image img {
+            width: 100%;
+            height: 100%;
+        }
+        .image input {
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        } 
+        img {
+            position: absolute;
+            user-select: none;
+            pointer-events: none;
+        }
+    </style>
+
+    <script src="PerspectiveTransform.js"></script>
+</head>
+<body>
+    
+    <div class="vert-image image">
+        <img src="#">
+        <input type="file" onchange="document.querySelector('.vert-image img').src = window.URL.createObjectURL(this.files[0])">
+    </div>
+    <div class="big-image image">
+        <img src="#">
+        <input type="file" onchange="document.querySelector('.big-image img').src = window.URL.createObjectURL(this.files[0])">
+    </div>
+    <img src="x3.png">
+    <button></button>
+    <div class="text left-text">
+        <textarea spellcheck="false">Just start editing by clicking the text panels.</textarea>
+    </div>
+    <div class="text right-text">
+        <textarea spellcheck="false">Click on the image boxes to change them. I have no idea what the correct resolutions are, figure it out.</textarea>
+    </div>
+
+
+    <div class="text name">
+        <input type="text" spellcheck="false" value="Name">
+    </div>
+
+    <script>
+        function lazy_transform(elem,w,h, x1,y1,x2,y2,x3,y3,x4,y4) {
+            var transform = new PerspectiveTransform(elem,w,h,false)
+            transform.topLeft.x = x1-1;
+            transform.topLeft.y = y1-1;
+    
+            transform.topRight.x = x2+1;
+            transform.topRight.y = y2-1;
+    
+            transform.bottomRight.x = x4+1;
+            transform.bottomRight.y = y4+1;
+    
+            transform.bottomLeft.x = x3-1;
+            transform.bottomLeft.y = y3+1;
+    
+            transform.update()
+        }
+
+        lazy_transform(document.querySelector(".big-image"),500,500,
+        103,176,
+        315,159,
+        96,314,
+        322,292)
+        lazy_transform(document.querySelector(".vert-image"),500,500,
+        320,160,
+        465,149,
+        332,319,
+        491,302)
+
+        lazy_transform(document.querySelector(".left-text"),434,407,
+        87,352,
+        496,310,
+        63,716,
+        553,637)
+        lazy_transform(document.querySelector(".right-text"),300,474,
+        482,87,
+        796,64,
+        569,536,
+        967,480)
+
+        lazy_transform(document.querySelector(".name"),230,33,
+        95,315,
+        323,293,
+        91,345,
+        323,323)
+
+    </script>
+</body>
+</html>
