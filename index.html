@@ -24,7 +24,7 @@
             width: 300px;
             height: 474px;
         }
-        .right-text textarea {
+        .right-text textarea,.right-text p {
             font-size: 10px !important;
         }
         .name {
@@ -34,7 +34,7 @@
         .name input {
             font-size: 33px;
         }
-        textarea,input {
+        textarea,input,.info p {
             position: relative;
             margin: 5px;
             width: calc(100% - 10px) !important;
@@ -76,6 +76,23 @@
             user-select: none;
             pointer-events: none;
         }
+
+        .config {
+            top: 735px;
+            display: block;
+            position: relative;
+            padding: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+
+        .info span {
+            background-color: #D9B70F;
+        }
+        .right-text span {
+            font-size: 10px;
+        }
     </style>
 
     <script src="PerspectiveTransform.js"></script>
@@ -91,14 +108,18 @@
         <input type="file" onchange="document.querySelector('.big-image img').src = window.URL.createObjectURL(this.files[0])">
     </div>
     <img src="x3.png">
-    <button></button>
-    <div class="text left-text">
+    <div class="text left-text info">
         <textarea spellcheck="false">Just start editing by clicking the text panels.</textarea>
+        <p></p>
     </div>
-    <div class="text right-text">
+    <div class="text right-text info">
         <textarea spellcheck="false">Click on the image boxes to change them. I have no idea what the correct resolutions are, figure it out.</textarea>
+        <p></p>
     </div>
 
+    <div class="config">
+        <button class="highlight">Start highlighting</button>
+    </div>
 
     <div class="text name">
         <input type="text" spellcheck="false" value="Name">
@@ -150,6 +171,49 @@
         91,345,
         323,323)
 
+    </script>
+    <script>
+        var highlight = document.querySelector(".highlight")
+        
+        var infotext = document.querySelectorAll(".info textarea")
+        var burnt_infotext = document.querySelectorAll(".info p")
+        
+        var highlighting = false
+        highlight.addEventListener("click",()=>{
+            highlighting = !highlighting
+            if (highlighting)  {
+                infotext.forEach((v,i)=>{
+                    v.setAttribute("readonly",highlighting)
+                    v.classList.add("hidden")
+                    v.innerHTML = v.value
+                    burnt_infotext[i].innerHTML = v.innerHTML.replaceAll("\n","<br>")
+                    if (burnt_infotext[i].classList.contains("hidden")) {
+                        burnt_infotext[i].classList.remove("hidden")
+                    }
+                })
+                highlight.innerHTML = "Select text, press [H], or click this to cancel."
+            } else {
+                infotext.forEach((v,i)=>{
+                    v.removeAttribute("readonly")
+                    burnt_infotext[i].classList.add("hidden")
+                    if (v.classList.contains("hidden")) {
+                        v.classList.remove("hidden")
+                    }
+                })
+                highlight.innerHTML = "Start highlighting"
+            }
+        })
+
+        document.addEventListener("keydown",(key)=>{
+            if (highlighting&&key.key == "h") {
+                var selection = window.getSelection()
+                if (selection.anchorNode.parentNode.parentNode.classList.contains("info")&&selection.focusNode.parentNode.parentNode.classList.contains("info")) {
+                    const text = selection.anchorNode.parentNode.innerHTML
+                console.log(text)
+                selection.anchorNode.parentNode.innerHTML = (text.replace(selection.toString(),`<span>${selection.toString()}</span>`,selection.focusOffset))
+                }
+            }
+        })
     </script>
 </body>
 </html>
